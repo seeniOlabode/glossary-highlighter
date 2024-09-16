@@ -1,0 +1,16 @@
+.post-heading {
+  @apply font-medium text-base;
+}
+
+.post-body {
+  @apply mt-8 flex flex-col gap-2;
+}
+
+.post-paragraph {
+  line-height: 1.8;
+  @apply selection:bg-accent selection:text-background;
+}
+
+.post-date {
+  @apply text-sm text-muted-foreground mt-2 block;
+}

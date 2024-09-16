@@ -1,0 +1,4 @@
+.app {
+  padding-top: clamp(4.375rem, 9vw + 1rem, 7.5rem);
+  padding-bottom: 100px;
+}

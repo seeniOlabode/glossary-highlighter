@@ -1,0 +1,9 @@
+:root {
+  --base-mono-hue: 0, 0%;
+  --base-accent: 56, 100%, 83%;
+
+  --foreground: hsla(var(--base-mono-hue), 93%, 1);
+  --muted-foreground: hsla(var(--base-mono-hue), 63%, 1);
+  --background: hsla(var(--base-mono-hue), 9%, 1);
+  --accent: hsla(var(--base-accent), 1);
+}
