@@ -11,6 +11,8 @@ type Glossary = {
 type PostParagraphProps = {
   children: React.ReactNode;
   glossary: Glossary;
+  initializeWord: (word: string) => boolean;
+  index: number;
 };
 
 type WordClickHandler = (word: React.MouseEvent<HTMLButtonElement>) => void;
@@ -33,7 +35,8 @@ const RenderReadableText = (
   text: string,
   glossary: Glossary,
   onClick: WordClickHandler,
-  lookUpWord: string
+  lookUpWord: string,
+  initializeWord: (word: string) => boolean
 ) => {
   let wordsToInitialize = wordsInOrderOfAppearance(Object.keys(glossary), text);
   const elements: JSX.Element[] = [];
@@ -41,35 +44,39 @@ const RenderReadableText = (
 
   // Loop through each glossary word
   wordsToInitialize.forEach((word) => {
-    const regex = new RegExp(`\\b${word}\\b`, "i"); // Match only the first occurrence of each word
-    const match = regex.exec(text); // Find the first match for the word
+    if (initializeWord(word)) {
+      const regex = new RegExp(`\\b${word}\\b`, "i"); // Match only the first occurrence of each word
+      const match = regex.exec(text); // Find the first match for the word
 
-    if (match !== null) {
-      // Add text before the match
-      if (match.index > lastIndex) {
+      if (match !== null) {
+        // Add text before the match
+        if (match.index > lastIndex) {
+          elements.push(
+            <span key={`text-${lastIndex}`} className="readable-child">
+              {text.substring(lastIndex, match.index)}
+            </span>
+          );
+        }
+
+        // Add the button for the matched word
         elements.push(
-          <span key={`text-${lastIndex}`} className="readable-child">
-            {text.substring(lastIndex, match.index)}
-          </span>
+          <button
+            data-role="button"
+            key={`word-${match.index}`}
+            className={`glossary-word ${
+              lookUpWord === match[0] ? "" : "readable-child"
+            }`}
+            data-word={match[0]}
+            onClick={onClick}
+          >
+            {match[0]}
+          </button>
         );
+
+        // Update lastIndex to just after the matched word
+        lastIndex = match.index + match[0].length;
+        // initializedWords[word] = true;
       }
-
-      // Add the button for the matched word
-      elements.push(
-        <button
-          key={`word-${match.index}`}
-          className={`glossary-word ${
-            lookUpWord === match[0] ? "" : "readable-child"
-          }`}
-          data-word={match[0]}
-          onClick={onClick}
-        >
-          {match[0]}
-        </button>
-      );
-
-      // Update lastIndex to just after the matched word
-      lastIndex = match.index + match[0].length;
     }
   });
 
@@ -105,8 +112,9 @@ const RenderLookUpText = (
 
     elements.push(
       <button
+        data-role="button"
         key={`word-${match.index}-look-up`}
-        className="glossary-word"
+        className="glossary-word look-up-button"
         data-word={match[0]}
         onClick={onClick}
       >
@@ -140,41 +148,73 @@ const RenderLookUpText = (
   return elements;
 };
 
-export function PostParagraph({ children, glossary }: PostParagraphProps) {
+export function PostParagraph({
+  children,
+  glossary,
+  initializeWord,
+  index,
+}: PostParagraphProps) {
   const [lookUpText, setLookUpText] = useState("");
   const [lookUpWord, setLookUpWord] = useState("");
   const [showLookUp, setShowLookUp] = useState(false);
+
+  function toggleLookUp(word: string) {
+    setLookUpWord(() => word);
+    setLookUpText(() => glossary[word]);
+    setShowLookUp((showLookUp) => !showLookUp);
+  }
 
   function onLookUp(e: React.MouseEvent<HTMLButtonElement>) {
     const word = e.currentTarget.dataset["word"]; // Correct access to dataset
 
     if (word) {
-      setLookUpWord(() => word);
-      setLookUpText(() => glossary[word]);
-      setShowLookUp((showLookUp) => !showLookUp);
+      toggleLookUp(word);
+    }
+  }
+
+  function onClickGlossaryLookup(e: React.MouseEvent<HTMLDivElement>) {
+    const target = e.target as HTMLElement; // Assert the type to HTMLElement
+
+    if (target.id === "glossary-lookup") {
+      toggleLookUp("");
+    } else if (Array.from(target.classList).includes("filler-text")) {
+      toggleLookUp("");
     }
   }
   // Ensure children is treated as a string
   const text = typeof children === "string" ? children : "";
 
   return (
-    <p className={`post-paragraph relative ${showLookUp ? "look-up" : ""}`}>
-      <span className="readable-content">
-        {RenderReadableText(text, glossary, onLookUp, lookUpWord)}
-      </span>
+    <p
+      style={{ animationDelay: `${index * 0.2 + 0.2 + 0.5}s` }}
+      className={`post-paragraph relative ${showLookUp ? "look-up" : ""}`}
+    >
+      <div className="readable-content">
+        {RenderReadableText(
+          text,
+          glossary,
+          onLookUp,
+          lookUpWord,
+          initializeWord
+        )}
+      </div>
       <AnimatePresence initial={false}>
         {showLookUp ? (
           <motion.div
-            className="glossary-lookup"
+            className="glossary-lookup z-10"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             key={"glossary-lookup" + showLookUp}
+            id="glossary-lookup"
+            onClick={onClickGlossaryLookup}
           >
             {RenderLookUpText(text, lookUpText, lookUpWord, onLookUp)}
           </motion.div>
         ) : null}
       </AnimatePresence>
+
+      <span className="filler-text">{text}</span>
     </p>
   );
 }

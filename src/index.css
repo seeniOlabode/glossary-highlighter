@@ -1,6 +1,7 @@
 /* custom */
 @import "./css/variables.css";
 @import "./css/typography.css";
+@import "./css/animation.css";
 
 /* tailwind */
 @tailwind base;

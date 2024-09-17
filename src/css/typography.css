@@ -1,16 +1,40 @@
 .post-heading {
-  @apply font-medium text-base;
+  --vw-padding: calc(100vw - 1.5rem);
+  --content-width: clamp(0px, var(--p-width, 768px), var(--vw-padding));
+  --font-content-vw: calc((1.1 / 100) * var(--content-width));
+  font-size: clamp(1rem, var(--font-content-vw) + 0.4288rem, 1.5rem);
+  transition: font-size var(--ease-out-quint) 0.5s,
+    line-height var(--ease-out-quint) 0.5s;
+  @apply font-medium;
 }
 
 .post-body {
-  @apply mt-8 flex flex-col gap-2;
+  --vw-padding: calc(100vw - 1.5rem);
+  --content-width: clamp(0px, var(--p-width, 768px), var(--vw-padding));
+  --gap-content-vw: calc((5.952 / 100) * var(--content-width));
+  --font-content-vw: calc((1.1 / 100) * var(--content-width));
+  font-size: clamp(1rem, var(--font-content-vw) + 0.4288rem, 1.5rem);
+  transition: font-size var(--ease-out-quint) 0.5s,
+    line-height var(--ease-out-quint) 0.5s;
+  @apply mt-8 flex flex-col;
+  gap: clamp(0.625rem, var(--gap-content-vw) - 2.604rem, 3.125rem);
 }
 
 .post-paragraph {
-  line-height: 1.8;
+  --content-vw: calc((1.67 / 100) * var(--content-width));
+  line-height: clamp(1.8rem, var(--content-vw) + 0.99rem, 2.5rem);
+  transition: font-size var(--ease-out-quint) 0.5s,
+    line-height var(--ease-out-quint) 0.5s;
   @apply selection:bg-accent selection:text-background;
 }
 
 .post-date {
   @apply text-sm text-muted-foreground mt-2 block;
+}
+
+@container wrapper (max-width: 640px) {
+  .post-body {
+    gap: 50px;
+    text-align: justify;
+  }
 }

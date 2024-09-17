@@ -1,0 +1,9 @@
+:root {
+  --fade-up: fade-up 0.7s var(--ease-out-quad);
+}
+@keyframes fade-up {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

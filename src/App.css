@@ -1,4 +1,70 @@
+body::before {
+  position: fixed;
+  content: "";
+  display: block;
+  inset: 0;
+  background: linear-gradient(140deg, transparent 20%, var(--dark) 90%);
+  z-index: -1;
+}
+
 .app {
   padding-top: clamp(4.375rem, 9vw + 1rem, 7.5rem);
   padding-bottom: 100px;
+  max-width: 100vw;
+  height: fit-content;
+  min-height: 100vh;
+  position: relative;
+}
+
+.app::after {
+  position: fixed;
+  content: "";
+  display: block;
+  inset: 0;
+  top: 20px;
+  backdrop-filter: blur(20px) brightness(0.4);
+  mask-image: linear-gradient(to bottom, black 0%, transparent 60px);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.app::before {
+  position: fixed;
+  content: "";
+  display: block;
+  inset: 0;
+  top: 20px;
+  backdrop-filter: blur(20px) brightness(0.2);
+  mask-image: linear-gradient(to top, black 0%, transparent 60px);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.content-wrapper {
+  container: wrapper / inline-size;
+}
+
+.app .content-wrapper > header {
+  animation: var(--fade-up);
+  animation-delay: 0.55s;
+  animation-fill-mode: forwards;
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.post-paragraph {
+  animation: var(--fade-up);
+  animation-fill-mode: forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+@container wrapper (min-width: 1024px) {
+  .app .content-wrapper > header {
+    transform: translateY(20px);
+  }
+
+  .post-paragraph {
+    transform: translateY(40px);
+  }
 }
