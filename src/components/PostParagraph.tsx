@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import "./PostParagraph.css";
 
@@ -157,6 +157,7 @@ export function PostParagraph({
   const [lookUpText, setLookUpText] = useState("");
   const [lookUpWord, setLookUpWord] = useState("");
   const [showLookUp, setShowLookUp] = useState(false);
+  const lookupRef = useRef<HTMLDivElement | null>(null);
 
   function toggleLookUp(word: string) {
     setLookUpWord(() => word);
@@ -181,6 +182,13 @@ export function PostParagraph({
       toggleLookUp("");
     }
   }
+
+  // useEffect(() => {
+  //   if (showLookUp && lookupRef.current) {
+  //     lookupRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+  //   }
+  // });
+
   // Ensure children is treated as a string
   const text = typeof children === "string" ? children : "";
 
@@ -208,6 +216,7 @@ export function PostParagraph({
             key={"glossary-lookup" + showLookUp}
             id="glossary-lookup"
             onClick={onClickGlossaryLookup}
+            ref={lookupRef}
           >
             {RenderLookUpText(text, lookUpText, lookUpWord, onLookUp)}
           </motion.div>

@@ -19,7 +19,7 @@ const breakpoints = [
   },
 ];
 
-export function BreakpointPicker({ onBreakPoint }) {
+export function BreakpointPicker({ onBreakPoint, selectedBreakpoint }) {
   const [hoveredBreakpoint, setHoveredBreakpoint] = useState("");
 
   function onHoverBreakpoint(

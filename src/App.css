@@ -4,6 +4,7 @@ body::before {
   display: block;
   inset: 0;
   background: linear-gradient(140deg, transparent 20%, var(--dark) 90%);
+  animation: var(--fade-up);
   z-index: -1;
 }
 
@@ -26,6 +27,7 @@ body::before {
   mask-image: linear-gradient(to bottom, black 0%, transparent 60px);
   z-index: 5;
   pointer-events: none;
+  animation: var(--fade-up);
 }
 
 .app::before {
@@ -38,6 +40,7 @@ body::before {
   mask-image: linear-gradient(to top, black 0%, transparent 60px);
   z-index: 5;
   pointer-events: none;
+  animation: var(--fade-up);
 }
 
 .content-wrapper {

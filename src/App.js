@@ -88,7 +88,10 @@ function App() {
 
   return (
     <>
-      <BreakpointPicker onBreakPoint={onBreakPoint} />
+      <BreakpointPicker
+        onBreakPoint={onBreakPoint}
+        selectedBreakpoint={breakpoint}
+      />
       <AnimatePresence initial={false}>
         <motion.div
           className="app w-screen text-foreground mx-auto p-6"
